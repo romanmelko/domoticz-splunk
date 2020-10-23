@@ -1,0 +1,34 @@
+version: "3"
+services:
+  domoticz:
+    image: domoticz
+    container_name: domoticz
+    hostname: raspberrypi4_1
+    network_mode: "host"
+    build:
+      context: ./
+      dockerfile: Dockerfile_domoticz
+    volumes:
+      - /opt/docker/domoticz/config:/opt/domoticz/config
+      - /opt/docker/splunkforwarder/var/log/domoticz:/opt/domoticz/log
+    ports:
+      - 8080:8080
+      - 6144:6144
+      - 1443:1443
+      - 9898:9898/udp
+    restart: unless-stopped
+  splunkforwarder:
+    image: splunkforwarder
+    container_name: splunkforwarder
+    hostname: raspberrypi4_1
+    build:
+      context: ./
+      dockerfile: Dockerfile_splunkforwarder
+    environment:
+      - "SPLUNK_START_ARGS=--accept-license --answer-yes --no-prompt"
+      - "SPLUNK_PASSWORD=changeme"
+    volumes:
+      - /opt/docker/splunkforwarder/var/log:/opt/splunkforwarder/var/log
+    ports:
+      - 514:1514/udp
+    restart: unless-stopped

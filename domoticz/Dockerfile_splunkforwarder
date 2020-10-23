@@ -1,0 +1,28 @@
+FROM debian:stable-slim
+
+ENV SPLUNK_HOME=/opt/splunkforwarder
+ENV SPLUNK_GROUP=splunk
+ENV SPLUNK_USER=splunk
+ENV SPLUNK_URL="https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86&platform=linux&version=8.1.0&product=universalforwarder&filename=splunkforwarder-8.1.0-f57c09e87251-Linux-arm.tgz&wget=true"
+ENV SPLUNK_FILENAME="splunkforwarder.tgz"
+ENV LANG en_US.utf8
+
+ADD start.sh /
+ADD splunk_conf/*.conf ${SPLUNK_HOME}/etc/system/local/
+
+RUN groupadd -r ${SPLUNK_GROUP} \
+    && useradd -r -m -g ${SPLUNK_GROUP} ${SPLUNK_USER} \
+    && apt-get update \
+    && apt-get install -y wget procps \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p ${SPLUNK_HOME} \
+    && wget -q -O ${SPLUNK_HOME}/../${SPLUNK_FILENAME} ${SPLUNK_URL} \
+    && ls -al ${SPLUNK_HOME}/../ \
+    && tar xzf "${SPLUNK_HOME}/../${SPLUNK_FILENAME}" --strip 1 -C ${SPLUNK_HOME} \
+    && chown -R ${SPLUNK_USER}:${SPLUNK_GROUP} ${SPLUNK_HOME} \
+    && chmod +x /start.sh
+
+WORKDIR /opt/splunkforwarder
+
+CMD ["/start.sh"]
+
