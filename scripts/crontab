@@ -1,0 +1,2 @@
+*/5 * * * * ~/domoticz-splunk/scripts/yihome_camera_logging.sh | logger -t yihome_camera_logging.sh
+7 * * * * ~/domoticz-splunk/scripts/network_printer_restart.sh | logger -t network_printer_restart.sh
