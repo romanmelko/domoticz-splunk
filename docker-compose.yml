@@ -28,8 +28,7 @@ services:
       - "SPLUNK_START_ARGS=--accept-license --answer-yes --no-prompt"
       - "SPLUNK_PASSWORD=changeme"
     volumes:
-      - /home/rom/domoticz-splunk/splunkforwarder/etc/system/local/inputs.conf:/opt/splunkforwarder/etc/system/local/inputs.conf
-      - /home/rom/domoticz-splunk/splunkforwarder/etc/system/local/outputs.conf:/opt/splunkforwarder/etc/system/local/outputs.conf
+      - /home/rom/domoticz-splunk/splunkforwarder/etc/system/local:/opt/splunkforwarder/etc/system/local
       - /opt/docker/splunkforwarder/var/log:/opt/splunkforwarder/var/log
     ports:
       - 514:1514/udp
