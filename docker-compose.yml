@@ -3,7 +3,7 @@ services:
   domoticz:
     image: domoticz
     container_name: domoticz
-    hostname: raspberrypi4_1
+    hostname: raspi-4b-1
     network_mode: "host"
     build:
       context: ./
@@ -20,16 +20,17 @@ services:
   splunkforwarder:
     image: splunkforwarder
     container_name: splunkforwarder
-    hostname: raspberrypi4_1
+    hostname: raspi-4b-1
+    network_mode: "host"
     build:
       context: ./
       dockerfile: Dockerfile_splunkforwarder
     environment:
       - "SPLUNK_START_ARGS=--accept-license --answer-yes --no-prompt"
       - "SPLUNK_PASSWORD=changeme"
+      - "SPLUNK_INDEXER_CONN=<splunk_indexer_host>:<splunk_indexer_port>"
     volumes:
-      - /home/rom/domoticz-splunk/splunkforwarder/etc/system/local:/opt/splunkforwarder/etc/system/local
       - /opt/docker/splunkforwarder/var/log:/opt/splunkforwarder/var/log
     ports:
-      - 514:1514/udp
+      - 514:514/udp
     restart: unless-stopped
