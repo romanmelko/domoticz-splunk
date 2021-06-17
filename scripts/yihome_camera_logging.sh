@@ -5,9 +5,9 @@ camera_ip="<camera_ip>"
 router_conn="<router_user>@<router_ip>"
 
 echo -n "Check for ${camera_ip} camera logging: "
-if [[ $(ssh ${router_conn} iptables -L | grep LOG | grep ${camera_ip} | wc -l) -eq 0 ]]; then
+if [[ $(ssh ${router_conn} /usr/sbin/iptables -L | grep LOG | grep ${camera_ip} | wc -l) -eq 0 ]]; then
 	echo -n "Disabled. "
-	ssh ${router_conn} iptables -I FORWARD -s ${camera_ip} -j LOG
+	ssh ${router_conn} /usr/sbin/iptables -I FORWARD -s ${camera_ip} -j LOG
 	exit_code=$?
 	if [ $exit_code -eq 0 ]; then
 		echo "Enabled"
